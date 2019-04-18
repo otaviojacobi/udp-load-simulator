@@ -7,6 +7,15 @@ class Application:
         self.log_format = log_format
         self.logger = self.__get_logger(verbose)
 
+    def start(self):
+        try:
+            self.handle()
+        except KeyboardInterrupt:
+            self.logger.info('CTRL+c pressed, now Exiting application...See you soon :-)')
+
+    def handle(self):
+        raise NotImplementedError('Abstract method <handle> should be implemented by child class.')
+
     def __get_logger(self, verbose):
         logger = logging.getLogger('application')
         ch = logging.StreamHandler()

@@ -15,15 +15,9 @@ class Server(Application):
             self.logger.critical('Failed to bind socket to port.Port probably already in use.' + str(exception))
             exit(1)
 
-    def start(self):
+    def handle(self):
         self.logger.info('Started server socket listening on port {}'.format(self.port))
-        try:
-            while True:
-                self.__handle_server()
-        except KeyboardInterrupt:
-            self.logger.info('CTRL+c pressed, now Exiting application...See you soon :-)')
-
-    def __handle_server(self):
-        self.logger.debug('Waiting for next connection on port {}'.format(self.port))
-        data, address = self.socket.recvfrom(1024)
-        self.logger.debug('Recevied data:\n{}\nfrom: {}'.format(data.decode(), address))
+        while True:
+            self.logger.debug('Waiting for next connection on port {}'.format(self.port))
+            data, address = self.socket.recvfrom(1024)
+            self.logger.debug('Recevied data, size:{}, from: {}'.format(len(data), address))

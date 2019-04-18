@@ -1,5 +1,6 @@
 from application import Application
 import socket
+import time
 
 class Client(Application):
 
@@ -10,14 +11,8 @@ class Client(Application):
         self.time = time
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    def start(self):
+    def handle(self):
         self.logger.info('Started client socket to connect to server on port {}'.format(self.port))
-        try:
-            while True:
-                self.__handle_client()
-        except KeyboardInterrupt:
-            self.logger.info('CTRL+c pressed, now Exiting application...See you soon :-)')
-    
-    def __handle_client(self):
-        msg = input('Message to send to server: \n')
-        self.socket.sendto(msg.encode(), (self.server_host, self.port))
+        while True:
+            self.socket.sendto(bytearray(1024), (self.server_host, self.port))
+            time.sleep(1)
