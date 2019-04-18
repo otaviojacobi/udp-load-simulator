@@ -6,7 +6,7 @@ def main():
     args = CLIParser().parse()
 
     if args.server:
-        app = Server(args.port, args.format, args.verbose, args.daemon, args.pidfile)
+        app = Server(args.port, args.format, args.verbose)
     else:
         app = Client(args.port, args.format, args.verbose, args.bandwidth, args.time)
 
