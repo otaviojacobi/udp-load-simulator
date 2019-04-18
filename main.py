@@ -8,7 +8,7 @@ def main():
     if args.server:
         app = Server(args.port, args.format, args.verbose)
     else:
-        app = Client(args.port, args.format, args.verbose, args.bandwidth, args.time)
+        app = Client(args.port, args.format, args.verbose, args.host, args.bandwidth, args.time)
 
     app.start()
 

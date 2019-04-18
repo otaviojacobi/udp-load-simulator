@@ -1,6 +1,6 @@
 import argparse
 
-class CLIParser():
+class CLIParser:
 
     def __init__(self):
         self.parser = argparse.ArgumentParser()
