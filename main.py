@@ -1,6 +1,9 @@
-from src.cli import CLIParser
-from src.client import Client
-from src.server import Server
+import sys
+sys.path.append('./src')
+
+from cli import CLIParser
+from client import Client
+from server import Server
 
 def main():
     args = CLIParser().parse()

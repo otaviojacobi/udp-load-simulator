@@ -1,5 +1,5 @@
 import argparse
-from .units import MEGABITS_TO_BITS, KILOBITS_TO_BITS
+from units import MEGABITS_TO_BITS, KILOBITS_TO_BITS
 
 class CLIParser:
 

@@ -2,7 +2,7 @@ import logging
 from threading import Thread, Lock
 import time
 import socket
-from .units import format_bits_as_measure, format_bits_as_measure_per_second
+from units import format_bits_as_measure, format_bits_as_measure_per_second
 
 class Application:
 
