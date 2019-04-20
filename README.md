@@ -1,17 +1,17 @@
-### UDP Load Simulator
+## UDP Load Simulator
 
 This is a tool for simulate load over a network.
 It's highly inspired in the Iperf tool.
 
-### How to use it
+## How to use it
 
 You can run `python3 main.py -s` to start the server.
 You can run `python3 main.py -c localhost` to start the client in the same host machine. You can replace the client HOST for the target machine IP
 
 You can also run `python3 main.py -h` to check the full documentation or you can read bellow.
 
-## CLI Arguments
-
+### CLI Arguments
+```
 usage: main.py [-h] (-s | -c HOST) [-i INTERVAL] [-p PORT] [-f {k,K,m,M}] [-V]
                [-b BANDWIDTH] [-t TIME]
 
@@ -40,3 +40,4 @@ optional arguments:
                         Default 1 Mbit/sec.
   -t TIME, --time TIME  [CLIENT ONLY] The time in seconds to transmit for.
                         Default is 10 seconds.
+```
