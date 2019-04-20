@@ -10,7 +10,7 @@ def main():
     else:
         app = Client(args.port, args.interval, args.format, args.verbose, args.host, args.bandwidth, args.time)
 
-    app.start()
+    app.run()
 
 if __name__ == '__main__':
     main()
