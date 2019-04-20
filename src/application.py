@@ -1,8 +1,8 @@
 import logging
 from threading import Thread, Lock
 import time
-import units
 import socket
+from .units import format_bits_as_measure, format_bits_as_measure_per_second
 
 class Application:
 
@@ -65,10 +65,10 @@ class Application:
 
             self.logger.debug('Total bits {} last interval: {}'.format(mode, self.__bits_transfered_last_interval))
 
-            total_transfered_with_unit = units.format_bits_as_measure(self.__bits_transfered_last_interval, self.log_format)
+            total_transfered_with_unit = format_bits_as_measure(self.__bits_transfered_last_interval, self.log_format)
 
             bits_per_second_transfered = self.__bits_transfered_last_interval / self.interval
-            transfered_per_second_with_unit = units.format_bits_as_measure_per_second(bits_per_second_transfered, self.log_format)
+            transfered_per_second_with_unit = format_bits_as_measure_per_second(bits_per_second_transfered, self.log_format)
 
             self.logger.info('| {} | Transfered {} | Bandwitch {}'.format(mode, total_transfered_with_unit, transfered_per_second_with_unit))
 

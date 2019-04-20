@@ -1,5 +1,5 @@
-from application import Application
-from units import UDP_DEFAULT_BUFFER_SIZE, BYTES_TO_BITS
+from .application import Application
+from .units import UDP_DEFAULT_BUFFER_SIZE, BYTES_TO_BITS
 
 class Server(Application):
 
