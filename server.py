@@ -3,13 +3,14 @@ import time
 import socket
 from units import UDP_DEFAULT_BUFFER_SIZE
 from threading import Thread, Lock
+import units
 
 class Server(Application):
 
     def __init__(self, port, interval, log_format, verbose):
         super().__init__(port, interval, log_format, verbose)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.__bits_received_last_second = 0
+        self.__bits_received_last_interval = 0
         self.__bits_received_last_second_mutex = Lock()
         self.logging_thread = None
 
@@ -28,7 +29,7 @@ class Server(Application):
             self.logger.debug('Waiting for next connection on port {}'.format(self.port))
             data, address = self.socket.recvfrom(UDP_DEFAULT_BUFFER_SIZE)
             self.__bits_received_last_second_mutex.acquire()
-            self.__bits_received_last_second += len(data)
+            self.__bits_received_last_interval += 8 * len(data)
             self.__bits_received_last_second_mutex.release()
 
     def __start_daemon_logging_thread(self):
@@ -40,6 +41,13 @@ class Server(Application):
         while True:
             time.sleep(self.interval)
             self.__bits_received_last_second_mutex.acquire()
-            self.logger.info('Total received: {}'.format(self.__bits_received_last_second))
-            self.__bits_received_last_second = 0
+
+            self.logger.debug('Total bits received last interval: {}'.format(self.__bits_received_last_interval))
+
+            bits_per_second_received = self.__bits_received_last_interval / self.interval
+            recevied_last_second_with_measure = units.format_bits_as(bits_per_second_received, self.log_format)
+            self.logger.info(recevied_last_second_with_measure)
+
+            self.__bits_received_last_interval = 0
+
             self.__bits_received_last_second_mutex.release()
