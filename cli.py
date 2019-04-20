@@ -1,4 +1,5 @@
 import argparse
+from units import MEGA_TO_BITS, KILO_TO_BITS
 
 class CLIParser:
 
@@ -10,6 +11,7 @@ class CLIParser:
         client_server_group = self.parser.add_mutually_exclusive_group(required=True)
         client_server_group.add_argument('-s', '--server', action='store_true', help='Run in server mode. (This will only allow one connection at a time)')
         client_server_group.add_argument('-c', '--client', type=str, dest='host', help='Run in client mode, connecting to an iPerf server running on host.')
+        self.parser.add_argument('-i', '--interval', type=int, default=1, help='The interval to which info about measurements shall be displayed. Default to 1.')
         self.parser.add_argument('-p', '--port', type=int, default=5201, help='The server port to the server to listen on and the client to connect to. This should be the same in both client and server. Default is 5201')
         self.parser.add_argument('-f', '--format', choices=['k', 'K', 'm', 'M'], help='A letter specifying the format to print bandwidth numbers in. Supported formats are "k" = Kbits/sec "K" = KBytes/sec "m" = Mbits/sec "M" = MBytes/sec  The adaptive formats choose between kilo- and mega- as appropriate.')
         self.parser.add_argument('-V', '--verbose', action='store_true', help='Give more detailed output')
@@ -19,8 +21,15 @@ class CLIParser:
     def __is_valid_bandwidth(self, bandwidth):
         return bandwidth[-1] in ['K', 'M'] and bandwidth[0:-1].isdigit()
 
+    def __convert_bandwidth_to_bits(self, bandwidth):
+        measure_unit = bandwidth[-1]
+        measure_value = int(bandwidth[0:-1])
+
+        return measure_value * MEGA_TO_BITS if measure_unit == 'M' else measure_value * KILO_TO_BITS
+
     def parse(self):
         args = self.parser.parse_args()
         if not self.__is_valid_bandwidth(args.bandwidth):
             self.parser.error('Bandwitch should be in format N[KM] where N is a numeric value')
+        args.bandwidth = self.__convert_bandwidth_to_bits(args.bandwidth)
         return args

@@ -1,18 +1,39 @@
 from application import Application
 import socket
 import time
+from units import UDP_DEFAULT_BUFFER_SIZE
+
 
 class Client(Application):
 
-    def __init__(self, port, log_format, verbose, server_host, bandwidth, time):
-        super().__init__(port, log_format, verbose)
+    def __init__(self, port, interval, log_format, verbose, server_host, bandwidth, time):
+        super().__init__(port, interval, log_format, verbose)
         self.server_host = server_host
         self.bandwidth = bandwidth
         self.time = time
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+        bandwidth_in_bytes = self.bandwidth // 8
+        full_buffer_iterations = bandwidth_in_bytes // UDP_DEFAULT_BUFFER_SIZE
+        last_buffer_iteration = (bandwidth_in_bytes / UDP_DEFAULT_BUFFER_SIZE) - full_buffer_iterations
+        last_buffer_iteration_size = int(last_buffer_iteration * UDP_DEFAULT_BUFFER_SIZE)
+
+        self.full_buffer_iterations = full_buffer_iterations
+        self.last_buffer_iteration_size = last_buffer_iteration_size
+
+        self.logger.debug('Bandwitch in BYTES {}'.format(bandwidth_in_bytes))
+        self.logger.debug('Amount of iterations {}'.format(full_buffer_iterations))
+        self.logger.debug('Last Iteration Size {} BYTES'.format(last_buffer_iteration_size))
+
     def handle(self):
         self.logger.info('Started client socket to connect to server on port {}'.format(self.port))
-        while True:
-            self.socket.sendto(bytearray(1024), (self.server_host, self.port))
+        for _ in range(self.time):
+            self.__send_bits()
             time.sleep(1)
+
+    def __send_bits(self):
+        for _ in range(self.full_buffer_iterations):
+            self.socket.sendto(bytearray(UDP_DEFAULT_BUFFER_SIZE), (self.server_host, self.port))
+
+        if self.last_buffer_iteration_size != 0:
+            self.socket.sendto(bytearray(self.last_buffer_iteration_size), (self.server_host, self.port))

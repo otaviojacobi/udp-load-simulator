@@ -2,8 +2,9 @@ import logging
 
 class Application:
 
-    def __init__(self, port, log_format, verbose):
+    def __init__(self, port, interval, log_format, verbose):
         self.port = port
+        self.interval = interval
         self.log_format = log_format
         self.logger = self.__get_logger(verbose)
 

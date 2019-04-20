@@ -1,12 +1,18 @@
 from application import Application
 import time
 import socket
+from units import UDP_DEFAULT_BUFFER_SIZE
+from threading import Thread, Lock
 
 class Server(Application):
 
-    def __init__(self, port, log_format, verbose):
-        super().__init__(port, log_format, verbose)
+    def __init__(self, port, interval, log_format, verbose):
+        super().__init__(port, interval, log_format, verbose)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.__bits_received_last_second = 0
+        self.__bits_received_last_second_mutex = Lock()
+        self.logging_thread = None
+
         try:
             self.logger.debug('Trying to bind server to port {}'.format(self.port))
             self.socket.bind(('127.0.0.1', self.port))
@@ -17,7 +23,23 @@ class Server(Application):
 
     def handle(self):
         self.logger.info('Started server socket listening on port {}'.format(self.port))
+        self.__start_daemon_logging_thread()
         while True:
             self.logger.debug('Waiting for next connection on port {}'.format(self.port))
-            data, address = self.socket.recvfrom(1024)
-            self.logger.debug('Recevied data, size:{}, from: {}'.format(len(data), address))
+            data, address = self.socket.recvfrom(UDP_DEFAULT_BUFFER_SIZE)
+            self.__bits_received_last_second_mutex.acquire()
+            self.__bits_received_last_second += len(data)
+            self.__bits_received_last_second_mutex.release()
+
+    def __start_daemon_logging_thread(self):
+        self.logging_thread = Thread(target=self.__logging_thread)
+        self.logging_thread.setDaemon(True)
+        self.logging_thread.start()
+
+    def __logging_thread(self):
+        while True:
+            time.sleep(self.interval)
+            self.__bits_received_last_second_mutex.acquire()
+            self.logger.info('Total received: {}'.format(self.__bits_received_last_second))
+            self.__bits_received_last_second = 0
+            self.__bits_received_last_second_mutex.release()
