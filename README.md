@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/otaviojacobi/udp-load-simulator.png)](https://travis-ci.com/otaviojacobi/udp-load-simulator)
+
 ## UDP Load Simulator
 
 This is a tool for simulate load over a network.
