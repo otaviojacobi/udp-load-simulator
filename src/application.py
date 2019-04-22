@@ -70,9 +70,10 @@ class Application:
             bits_per_second_transfered = self.__bits_transfered_last_interval / self.interval
             transfered_per_second_with_unit = format_bits_as_measure_per_second(bits_per_second_transfered, self.log_format)
 
-            self.logger.info('| {} | Transfered {} | Bandwitch {}'.format(mode, total_transfered_with_unit, transfered_per_second_with_unit))
+            self.logger.info('| {} | Transfered {} | Bandwidth {}'.format(mode, total_transfered_with_unit, transfered_per_second_with_unit))
 
             # This is ugly. Logging thread ALSO resets for the next printing iteration.
+            self.logger.debug('Cleaning up bits sent in last interval mode {}'.format(mode))
             self.__bits_transfered_last_interval = 0
 
             self.__bits_transfered_last_second_mutex.release()

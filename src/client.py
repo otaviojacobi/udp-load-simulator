@@ -19,12 +19,12 @@ class Client(Application):
         self.full_buffer_iterations = full_buffer_iterations
         self.last_buffer_iteration_size = last_buffer_iteration_size
 
-        self.logger.debug('Bandwitch in BYTES {}'.format(bandwidth_in_bytes))
+        self.logger.debug('Bandwidth in BYTES {}'.format(bandwidth_in_bytes))
         self.logger.debug('Amount of iterations {}'.format(full_buffer_iterations))
         self.logger.debug('Last Iteration Size {} BYTES'.format(last_buffer_iteration_size))
 
     def handle(self):
-        self.logger.info('Started client socket to connect to server on port {}'.format(self.port))
+        self.logger.info('Started client socket to send load to server {}'.format((self.server_host, self.port)))
         self.start_daemon_logging_thread('sent')
         for _ in range(self.time):
             self.__send_bits()

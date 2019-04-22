@@ -31,6 +31,6 @@ class CLIParser:
 
         args = self.parser.parse_args() if mock_arguments is None else self.parser.parse_args(mock_arguments)
         if not self.__is_valid_bandwidth(args.bandwidth):
-            self.parser.error('Bandwitch should be in format N[KM] where N is a numeric value')
+            self.parser.error('Bandwidth should be in format N[KM] where N is a numeric value')
         args.bandwidth = self.__convert_bandwidth_to_bits(args.bandwidth)
         return args
