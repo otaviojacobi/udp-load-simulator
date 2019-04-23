@@ -17,6 +17,7 @@ class CLIParser:
         self.parser.add_argument('-p', '--port', type=int, default=5201, help='The server port to the server to listen on and the client to connect to. This should be the same in both client and server. Default is 5201')
         self.parser.add_argument('-f', '--format', choices=['k', 'K', 'm', 'M'], default='m', help='A letter specifying the format to print bandwidth numbers in. Supported formats are "k" = Kbits/sec "K" = KBytes/sec "m" = Mbits/sec "M" = MBytes/sec  The adaptive formats choose between kilo- and mega- as appropriate. Default to m.')
         self.parser.add_argument('-V', '--verbose', action='store_true', help='Give more detailed output')
+        self.parser.add_argument('-j', '--json', action='store_true', help='output in JSON format')
         self.parser.add_argument('-b', '--bandwidth', type=str, default='1M', help='[CLIENT ONLY] Set target bandwidth to N[KM] bits/sec. Default 1 Mbit/sec.')
         self.parser.add_argument('-t', '--time', type=int, default=10, help='[CLIENT ONLY] The time in seconds to transmit for. Default is 10 seconds.')
 

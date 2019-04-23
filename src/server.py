@@ -3,8 +3,8 @@ from units import UDP_DEFAULT_BUFFER_SIZE, BYTES_TO_BITS
 
 class Server(Application):
 
-    def __init__(self, port, interval, log_format, verbose):
-        super().__init__(port, interval, log_format, verbose)
+    def __init__(self, port, interval, log_format, verbose, is_json):
+        super().__init__(port, interval, log_format, verbose, is_json)
         try:
             self.logger.debug('Trying to bind server to port {}'.format(self.port))
             self.socket.bind(('127.0.0.1', self.port))

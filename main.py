@@ -9,9 +9,9 @@ def main():
     args = CLIParser().parse()
 
     if args.server:
-        app = Server(args.port, args.interval, args.format, args.verbose)
+        app = Server(args.port, args.interval, args.format, args.verbose, args.json)
     else:
-        app = Client(args.port, args.interval, args.format, args.verbose, args.host, args.bandwidth, args.time)
+        app = Client(args.port, args.interval, args.format, args.verbose, args.host, args.bandwidth, args.time, args.json)
 
     app.run()
 

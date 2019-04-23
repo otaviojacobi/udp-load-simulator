@@ -5,8 +5,8 @@ from units import UDP_DEFAULT_BUFFER_SIZE, BYTES_TO_BITS
 
 class Client(Application):
 
-    def __init__(self, port, interval, log_format, verbose, server_host, bandwidth, time):
-        super().__init__(port, interval, log_format, verbose)
+    def __init__(self, port, interval, log_format, verbose, server_host, bandwidth, time, is_json):
+        super().__init__(port, interval, log_format, verbose, is_json)
         self.server_host = server_host
         self.bandwidth = bandwidth
         self.time = time

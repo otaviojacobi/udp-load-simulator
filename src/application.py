@@ -6,10 +6,11 @@ from units import format_bits_as_measure, format_bits_as_measure_per_second
 
 class Application:
 
-    def __init__(self, port, interval, log_format, verbose):
+    def __init__(self, port, interval, log_format, verbose, is_json):
         self.port = port
         self.interval = interval
         self.log_format = log_format
+        self.is_json = is_json
         self.logger = self.__get_logger(verbose)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -70,13 +71,21 @@ class Application:
             bits_per_second_transfered = self.__bits_transfered_last_interval / self.interval
             transfered_per_second_with_unit = format_bits_as_measure_per_second(bits_per_second_transfered, self.log_format)
 
-            self.logger.info('| {} | Transfered {} | Bandwidth {}'.format(mode, total_transfered_with_unit, transfered_per_second_with_unit))
+            self.__log_transfered_info(mode, total_transfered_with_unit, transfered_per_second_with_unit)
 
             # This is ugly. Logging thread ALSO resets for the next printing iteration.
             self.logger.debug('Cleaning up bits sent in last interval mode {}'.format(mode))
             self.__bits_transfered_last_interval = 0
 
             self.__bits_transfered_last_second_mutex.release()
+
+    def __log_transfered_info(self, mode, total_transfered_with_unit, transfered_per_second_with_unit):
+        if self.is_json:
+            print('{')
+            print('  "mode":{},\n  "transfered":{},\n  "bandwidth:{}'.format(mode, total_transfered_with_unit, transfered_per_second_with_unit))
+            print('}')
+        else:
+            self.logger.info('| {} | Transfered {} | Bandwidth {}'.format(mode, total_transfered_with_unit, transfered_per_second_with_unit))
 
     def __get_logger(self, verbose):
         logger = logging.getLogger('application')
