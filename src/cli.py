@@ -1,4 +1,5 @@
 import argparse
+import sys
 from units import MEGABITS_TO_BITS, KILOBITS_TO_BITS
 
 class CLIParser:
@@ -8,7 +9,8 @@ class CLIParser:
         self.__init_parser_args()
 
     def __init_parser_args(self):
-        client_server_group = self.parser.add_mutually_exclusive_group(required=True)
+        self.parser.add_argument('-v', '--version', action='store_true', help='Show version information and quit.')
+        client_server_group = self.parser.add_mutually_exclusive_group(required=('--version' not in sys.argv and '-v' not in sys.argv))
         client_server_group.add_argument('-s', '--server', action='store_true', help='Run in server mode. (This will only allow one connection at a time)')
         client_server_group.add_argument('-c', '--client', type=str, dest='host', help='Run in client mode, connecting to an iPerf server running on host.')
         self.parser.add_argument('-i', '--interval', type=int, default=1, help='The interval to which info about measurements shall be displayed. Default to 1.')
@@ -30,6 +32,11 @@ class CLIParser:
     def parse(self, mock_arguments=None):
 
         args = self.parser.parse_args() if mock_arguments is None else self.parser.parse_args(mock_arguments)
+
+        if args.version:
+            print('udp-load-simulator version 1.0.0 (April 2019)')
+            exit(1)
+
         if not self.__is_valid_bandwidth(args.bandwidth):
             self.parser.error('Bandwidth should be in format N[KM] where N is a numeric value')
         args.bandwidth = self.__convert_bandwidth_to_bits(args.bandwidth)
