@@ -7,7 +7,12 @@ class Client(Application):
 
     def __init__(self, port, interval, log_format, verbose, server_host, bandwidth, time, is_json):
         super().__init__(port, interval, log_format, verbose, is_json)
-        self.server_host = server_host
+
+        if server_host == 'localhost' or server_host == '127.0.0.1':
+            self.server_host = self.get_ip_address()
+        else:
+            self.server_host = server_host
+
         self.bandwidth = bandwidth
         self.time = time
 
