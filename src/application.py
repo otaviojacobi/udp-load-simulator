@@ -58,6 +58,11 @@ class Application:
         finally:
             self.__bits_transfered_last_second_mutex.release()
 
+    def get_ip_address(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+
     def __run_logging_thread(self, mode):
         self.logger.debug('Logging thread called with parameter {}'.format(mode))
         while True:

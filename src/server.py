@@ -7,7 +7,7 @@ class Server(Application):
         super().__init__(port, interval, log_format, verbose, is_json)
         try:
             self.logger.debug('Trying to bind server to port {}'.format(self.port))
-            self.socket.bind(('127.0.0.1', self.port))
+            self.socket.bind((self.get_ip_address(), self.port))
             self.logger.debug('Server bound to port {}'.format(self.port))
         except OSError as exception:
             self.logger.critical('Failed to bind socket to port.Port probably already in use.' + str(exception))
