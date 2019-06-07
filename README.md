@@ -8,9 +8,10 @@ It's highly inspired in the Iperf tool.
 ## How to use it
 
 You can run `python3 main.py -s` to start the server.
-You can run `python3 main.py -c localhost` to start the client in the same host machine. You can replace the client HOST for the target machine IP
+You can run `python3 main.py -c localhost` to start the client in the same host machine. You can replace the client HOST for the target machine IP or hostname.
 
 You can also run `python3 main.py -h` to check the full documentation or you can read bellow.
+All tests were done in linux, no guaranties to work in macOS/windows systems.
 
 ### CLI Arguments
 ```
