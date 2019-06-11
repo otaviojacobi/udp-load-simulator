@@ -7,6 +7,7 @@ MEGABYTES_TO_BITS = 8000000
 BYTES_TO_BITS = 8
 
 UDP_DEFAULT_BUFFER_SIZE = 8000
+UDP_IP_ETHERNET_HEADERS_SIZE = 42
 
 def format_bits_as_measure(bits, measure):
     if measure == 'k':

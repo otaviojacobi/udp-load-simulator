@@ -19,6 +19,6 @@ class Server(Application):
         while True:
             self.logger.debug('Waiting for next connection on port {}'.format(self.port))
             data, address = self.socket.recvfrom(UDP_DEFAULT_BUFFER_SIZE)
-            self.logger.debug('Received {} bytes from host {}'.format(len(data), address))
+            self.logger.debug('Received {} bytes from host {}'.format(len(data)+42, address))
             # We don't have to worry about cleaning up bits_transfered_last_interval, because the daemon thread handles the reset
-            self.increase_transfered_data(BYTES_TO_BITS * len(data))
+            self.increase_transfered_data(BYTES_TO_BITS * (len(data)+42))

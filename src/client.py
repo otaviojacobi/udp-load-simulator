@@ -1,6 +1,6 @@
 import time
 from application import Application
-from units import UDP_DEFAULT_BUFFER_SIZE, BYTES_TO_BITS
+from units import UDP_DEFAULT_BUFFER_SIZE, BYTES_TO_BITS, UDP_IP_ETHERNET_HEADERS_SIZE
 
 
 class Client(Application):
@@ -23,6 +23,10 @@ class Client(Application):
 
         self.full_buffer_iterations = full_buffer_iterations
         self.last_buffer_iteration_size = last_buffer_iteration_size
+        self.UDP_PACKAGE = bytearray(UDP_DEFAULT_BUFFER_SIZE - UDP_IP_ETHERNET_HEADERS_SIZE)
+        self.CORRECTION_PACKAGE = bytearray(self.last_buffer_iteration_size - UDP_IP_ETHERNET_HEADERS_SIZE)
+        self.SLEEP_TIME = float(1/(self.full_buffer_iterations + 1))
+        self.server_address = (self.server_host, self.port)
 
         self.logger.debug('Bandwidth in BYTES {}'.format(bandwidth_in_bytes))
         self.logger.debug('Amount of iterations {}'.format(full_buffer_iterations))
@@ -33,15 +37,16 @@ class Client(Application):
         self.start_daemon_logging_thread('sent')
         for _ in range(self.time):
             self.__send_bits()
-            time.sleep(1)
 
     def __send_bits(self):
         for _ in range(self.full_buffer_iterations):
-            self.socket.sendto(bytearray(UDP_DEFAULT_BUFFER_SIZE), (self.server_host, self.port))
+            self.socket.sendto(self.UDP_PACKAGE, self.server_address)
             # We don't have to worry about cleaning up bits_transfered_last_interval, because the daemon thread handles the reset
             self.increase_transfered_data(BYTES_TO_BITS * UDP_DEFAULT_BUFFER_SIZE)
+            time.sleep(self.SLEEP_TIME)
 
         if self.last_buffer_iteration_size != 0:
-            self.socket.sendto(bytearray(self.last_buffer_iteration_size), (self.server_host, self.port))
+            self.socket.sendto(self.CORRECTION_PACKAGE, self.server_address)
             # We don't have to worry about cleaning up bits_transfered_last_interval, because the daemon thread handles the reset
             self.increase_transfered_data(BYTES_TO_BITS * self.last_buffer_iteration_size)
+            time.sleep(self.SLEEP_TIME)
